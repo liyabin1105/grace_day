@@ -16,3 +16,6 @@ https://www.pgyer.com/grace_day
 ![screenshot](./screenshot/s1.png) ![screenshot](./screenshot/s2.png)
 ![screenshot](./screenshot/s3.png) ![screenshot](./screenshot/s4.png)
 
+## 说明
+APP的UI设计参考了FancyDays和小程序倒数日Air的UI风格。Logo则是在阿里Iconfont上找的。
+
