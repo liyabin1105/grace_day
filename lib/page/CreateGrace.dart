@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:grace_day/bloc/BlocProvider.dart';
 import 'package:grace_day/bloc/GraceCardBLoC.dart';
@@ -451,6 +453,7 @@ class _CreateGraceState extends State<CreateGrace> {
           return SelectBgImage(selectImage: selectImgUrl);
         })
     );
+
     if(url != null && url.toString().length != 0) {
       selectImgUrl = url;
       isShowImg = true;

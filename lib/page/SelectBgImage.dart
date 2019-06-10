@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:grace_day/widget/BgImageCard.dart';
+import 'package:image_picker/image_picker.dart';
 
 ///卡片图片背景选择
 class SelectBgImage extends StatefulWidget {
@@ -34,8 +37,53 @@ class _SelectBgImageState extends State<SelectBgImage> {
     imgList.add('./images/f5.png');
   }
 
+  File _image;
+
+  Future getImage(ImageSource source) async {
+    var image = await ImagePicker.pickImage(source: source);
+
+    setState(() {
+      _image = image;
+      if(_image != null) {
+        Navigator.pop(context, _image.path);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    PopupMenuButton pmb = PopupMenuButton<String>(
+        onSelected: (String value) {
+          if (value == '相机') {
+            getImage(ImageSource.camera);
+          } else {
+            getImage(ImageSource.gallery);
+          }
+        },
+
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          PopupMenuItem(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text('相机'),
+                Icon(Icons.camera_alt, color: Theme.of(context).primaryColor)
+              ],
+            ),
+            value: '相机',
+          ),
+          PopupMenuItem(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text('相册'),
+                Icon(Icons.camera, color: Theme.of(context).primaryColor)
+              ],
+            ),
+            value: '相册',
+          )
+        ]);
 
     return Scaffold(
         appBar: AppBar(
@@ -49,6 +97,9 @@ class _SelectBgImageState extends State<SelectBgImage> {
           ),
           elevation: 0.5,
           centerTitle: true,
+          actions: <Widget>[
+            pmb
+          ]
         ),
         body: NotificationListener(
           onNotification: (notification) {
