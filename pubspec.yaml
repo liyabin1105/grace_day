@@ -28,10 +28,13 @@ dependencies:
   fluttertoast: ^3.1.0
   shared_preferences: ^0.5.3
   image_picker: ^0.6.0
+  data_plugin: ^0.0.12
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  json_serializable: ^2.0.3
+  build_runner: ^1.3.0
 
 
 # For information on the generic Dart part of this file, see the
@@ -50,6 +53,7 @@ flutter:
     - images/f3.png
     - images/f4.png
     - images/f5.png
+    - images/login_logo.png
   fonts:
     - family: fz
       fonts:

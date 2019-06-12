@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grace_day/bloc/BlocProvider.dart';
 import 'package:grace_day/bloc/ThemeDataBLoC.dart';
+import 'package:grace_day/model/GraceBean.dart';
+import 'package:grace_day/page/Login.dart';
 import 'package:grace_day/page/SetGrace.dart';
 import 'package:grace_day/widget/CustomDialog.dart';
 import 'package:grace_day/widget/GraceCard.dart';
-import 'package:grace_day/model/GraceDay.dart';
 import 'package:grace_day/page/CreateGrace.dart';
 import 'package:grace_day/bloc/GraceCardBLoC.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,11 +42,59 @@ class _GraceShowState extends State<GraceShow> {
     }
   }
 
+  void _outLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('objectId', '');
+    Navigator.pushAndRemoveUntil(context,
+      new MaterialPageRoute(builder: (context) {
+        return Login();
+      }
+    ), (route) => route == null);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeDataBLoC themeBLoC = BlocProvider.of(context);
     final GraceCardBLoC cardBLoC = BlocProvider.of(context);
     checkTheme(themeBLoC);
+
+    PopupMenuButton pmb = PopupMenuButton<String>(
+      child: Center(
+        child: Container(
+          child: Text('设置', style: TextStyle(fontFamily: 'fz', fontSize: 16.0)),
+          padding: EdgeInsets.only(right: 16.0)
+        ),
+      ),
+      onSelected: (String value) {
+        if (value == '个性换肤') {
+          _showDialog();
+        } else if (value == '退出登录')  {
+          _outLogin();
+        }
+      },
+
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text('个性换肤'),
+              Icon(Icons.all_inclusive, color: Theme.of(context).primaryColor)
+            ],
+          ),
+          value: '个性换肤',
+        ),
+        PopupMenuItem(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text('退出登录'),
+              Icon(Icons.lock_open, color: Theme.of(context).primaryColor)
+            ],
+          ),
+          value: '退出登录',
+        )
+    ]);
 
     cardBLoC.queryAllData();
     return Scaffold(
@@ -61,32 +110,15 @@ class _GraceShowState extends State<GraceShow> {
         elevation: 0.5,
         centerTitle: true,
         actions: <Widget>[
-          Container(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: GestureDetector(
-                onTap: () => {
-                  _showDialog()
-                },
-                child: Text(
-                  '个性换肤',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontFamily: 'fz'
-                  ),
-                ),
-              ),
-            ),
-          )
+          pmb
         ],
       ),
       body: WillPopScope(
         child: Container(
-          child: StreamBuilder<List<GraceDay>>(
+          child: StreamBuilder<List<GraceBean>>(
             stream: cardBLoC.stream,
             initialData: cardBLoC.value,
-            builder: (BuildContext context, AsyncSnapshot<List<GraceDay>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<GraceBean>> snapshot) {
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, //每行三列
@@ -98,7 +130,7 @@ class _GraceShowState extends State<GraceShow> {
                 itemBuilder: (context, index) {
                   return Container(
                     padding: index % 2 == 0 ? EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0) : EdgeInsets.only(right: 16.0,top: 8.0, bottom: 8.0),
-                    child: GraceCard(graceDay: snapshot.data[index]),
+                    child: GraceCard(graceBean: snapshot.data[index]),
                   );
                 }
               );

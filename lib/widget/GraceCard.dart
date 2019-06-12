@@ -1,15 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:grace_day/model/GraceDay.dart';
+import 'package:grace_day/model/GraceBean.dart';
 import 'package:grace_day/page/CreateGrace.dart';
 
 ///自定义卡片组件
 class GraceCard extends StatefulWidget {
 
-  final GraceDay graceDay;
+  final GraceBean graceBean;
 
-  GraceCard({Key key, @required this.graceDay}) : super(key: key);
+  GraceCard({Key key, @required this.graceBean}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -56,10 +56,10 @@ class _GraceCardState extends State<GraceCard> {
     BoxDecoration boxDecoration1 = BoxDecoration(
       shape: BoxShape.rectangle, // 默认值也是矩形
       borderRadius: new BorderRadius.circular((11.0)),
-      color: cardBgColor(widget.graceDay.color),
+      color: cardBgColor(widget.graceBean.color),
       boxShadow: [
         BoxShadow(
-          color: cardBgColor(widget.graceDay.color),
+          color: cardBgColor(widget.graceBean.color),
           offset: Offset(2.0, 5.0),
           blurRadius: 20.0,
           spreadRadius: -3.0
@@ -70,7 +70,7 @@ class _GraceCardState extends State<GraceCard> {
     BoxDecoration boxDecoration2 = BoxDecoration(
       shape: BoxShape.rectangle,
       borderRadius: new BorderRadius.circular((11.0)),
-      image: DecorationImage(image: AssetImage(widget.graceDay.imgUrl), fit: BoxFit.fill),
+      image: DecorationImage(image: AssetImage(widget.graceBean.imgUrl), fit: BoxFit.fill),
       boxShadow: [
         BoxShadow(
           color: Colors.blueGrey,
@@ -88,7 +88,7 @@ class _GraceCardState extends State<GraceCard> {
             width: width
         ),
         //设置背景图片
-        decoration: widget.graceDay.bgType == 0 ? boxDecoration1 : boxDecoration2,
+        decoration: widget.graceBean.bgType == 0 ? boxDecoration1 : boxDecoration2,
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
@@ -96,7 +96,7 @@ class _GraceCardState extends State<GraceCard> {
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.graceDay.content,
+                  widget.graceBean.content,
                   textScaleFactor: 1.5,
                   style: TextStyle(
                     color: Color(0xFFFFFFFF),
@@ -109,7 +109,7 @@ class _GraceCardState extends State<GraceCard> {
                 margin: EdgeInsets.only(top: 16.0),
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.graceDay.remark,
+                  widget.graceBean.remark,
                   textScaleFactor: 1.0,
                   style: TextStyle(
                     color: Color(0xFFFFFFFF),
@@ -161,7 +161,7 @@ class _GraceCardState extends State<GraceCard> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      widget.graceDay.time,
+                      widget.graceBean.time,
                       textScaleFactor: 1.2,
                       style: TextStyle(
                         color: Color(0xFFFFFFFF),
@@ -176,12 +176,12 @@ class _GraceCardState extends State<GraceCard> {
           ),
         )
       ),
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateGrace(graceDay: widget.graceDay))),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateGrace(graceBean: widget.graceBean))),
     );
   }
 
   int dayNums() {
-    var _dateTime = DateTime.parse(widget.graceDay.time);
+    var _dateTime = DateTime.parse(widget.graceBean.time);
     int t1 = _dateTime.millisecondsSinceEpoch;
     int t2 = DateTime.now().millisecondsSinceEpoch;
     if (t1 > t2) {

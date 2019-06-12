@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:grace_day/bloc/BlocProvider.dart';
 import 'package:grace_day/bloc/GraceCardBLoC.dart';
-import 'package:grace_day/model/GraceDay.dart';
+import 'package:grace_day/model/GraceBean.dart';
 import 'package:grace_day/page/SelectBgImage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grace_day/widget/CustomDialog.dart';
@@ -11,9 +9,10 @@ import 'package:grace_day/widget/CustomDialog.dart';
 ///创建日程记录卡片
 class CreateGrace extends StatefulWidget {
 
-  final GraceDay graceDay;
+//  final GraceDay graceDay;
+  final GraceBean graceBean;
 
-  CreateGrace({Key key, @required this.graceDay}) : super(key: key);
+  CreateGrace({Key key, @required this.graceBean}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -38,14 +37,14 @@ class _CreateGraceState extends State<CreateGrace> {
   @override
   void initState() {
     super.initState();
-    if (widget.graceDay != null) {
-      _content = widget.graceDay.content;
-      _remark = widget.graceDay.remark;
-      selectColor = widget.graceDay.color;
-      selectImgUrl = widget.graceDay.imgUrl;
+    if (widget.graceBean != null) {
+      _content = widget.graceBean.content;
+      _remark = widget.graceBean.remark;
+      selectColor = widget.graceBean.color;
+      selectImgUrl = widget.graceBean.imgUrl;
       isShowDelBtn = false;
-      _dateTime = DateTime.parse(widget.graceDay.time);
-      if (widget.graceDay.bgType == 1) {
+      _dateTime = DateTime.parse(widget.graceBean.time);
+      if (widget.graceBean.bgType == 1) {
         isShowImg = true;
         selectColor = -1;
       } else {
@@ -502,14 +501,16 @@ class _CreateGraceState extends State<CreateGrace> {
       selectColor = -1;
     }
 
-    if (widget.graceDay != null) {
-      var id = widget.graceDay.id;
-      GraceDay todo = GraceDay(id, _content, _remark, _time, _bgType, selectColor, selectImgUrl);
-      bloc.updateCardDB(todo);
+    if (widget.graceBean != null) {
+      var id = widget.graceBean.objectId;
+//      GraceDay todo1 = GraceDay(id, _content, _remark, _time, _bgType, selectColor, selectImgUrl);
+//      bloc.updateCardDB(todo1);
+      bloc.updateSingle(id, _content, _remark, _time, _bgType, selectColor, selectImgUrl);
     } else {
       var id = DateTime.now().millisecondsSinceEpoch;
-      GraceDay todo = GraceDay(id, _content, _remark, _time, _bgType, selectColor, selectImgUrl);
-      bloc.saveCardDB(todo);
+//      GraceDay todo1 = GraceDay(id, _content, _remark, _time, _bgType, selectColor, selectImgUrl);
+//      bloc.saveCardDB(todo1);
+      bloc.saveSingle(id.toString(), _content, _remark, _time, _bgType, selectColor, selectImgUrl);
     }
     Navigator.pop(context);
   }
@@ -524,7 +525,8 @@ class _CreateGraceState extends State<CreateGrace> {
           outsideDismiss: false,
           confirmTextColor: Theme.of(context).primaryColor,
           confirmCallback: () async {
-            cardBLoC.deleteCardDB(widget.graceDay);
+//            cardBLoC.deleteCardDB(widget.graceDay);
+            cardBLoC.deleteSingle(widget.graceBean.objectId);
             Navigator.pop(context);
           },
         );
