@@ -22,6 +22,7 @@ class GraceShow extends StatefulWidget {
 class _GraceShowState extends State<GraceShow> {
 
   var themeIndex = 0; //已选中的主题颜色
+  var _isFirstComeIn = true; //标记首次进入首页
 
   void _showDialog() {
     showDialog(
@@ -56,7 +57,12 @@ class _GraceShowState extends State<GraceShow> {
   Widget build(BuildContext context) {
     final ThemeDataBLoC themeBLoC = BlocProvider.of(context);
     final GraceCardBLoC cardBLoC = BlocProvider.of(context);
-    checkTheme(themeBLoC);
+    if(_isFirstComeIn) {
+      checkTheme(themeBLoC);
+      //首次打开应用主动请求数据
+      cardBLoC.queryAllData();
+      _isFirstComeIn = false;
+    }
 
     PopupMenuButton pmb = PopupMenuButton<String>(
       child: Center(
@@ -96,7 +102,6 @@ class _GraceShowState extends State<GraceShow> {
         )
     ]);
 
-    cardBLoC.queryAllData();
     return Scaffold(
       appBar: AppBar(
         title: Text(
