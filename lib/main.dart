@@ -15,13 +15,11 @@ void main() => runApp(
   )
 );
 
-
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Bmob.initMasterKey("47bda463417af84c9d3b9c2443e64d97",
-        "330c88b87107dcc376d36c0e20abc1d3", "351853aee84a221a323d1ea22a55540d");
+    //Bmob SDK初始化，将appId,apiKey,masterKey替换自己的真实值。
+    Bmob.initMasterKey('appId', 'apiKey', 'masterKey');
     final ThemeDataBLoC bloc = BlocProvider.of(context);
     return StreamBuilder<ThemeData>(
       stream: bloc.stream,
